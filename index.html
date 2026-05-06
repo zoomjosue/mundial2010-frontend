@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="api-base" content="http://localhost:8080" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Mundial 2010 España</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet" href="css/style.css?v=20260506-3" />
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <a href="#" class="logo">
+      <span class="logo-icon">Copa</span>
+      <span class="logo-text">
+        <strong>Mundial 2010</strong>
+        <span>España Campeona</span>
+      </span>
+    </a>
+    <nav>
+      <button class="nav-btn" id="btn-export-csv">Exportar CSV</button>
+      <a href="http://localhost:8080/swagger" target="_blank" class="nav-btn">API Docs</a>
+      <button class="nav-btn primary" id="btn-new">Nueva Serie</button>
+    </nav>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="hero-flag"></div>
+  <div class="hero-content">
+    <div class="hero-badge">Sudáfrica, 11 Jun - 11 Jul 2010</div>
+    <h1>La Historia de<br/><em>España Campeona</em></h1>
+    <p>Del primer tropiezo frente a Suiza al gol eterno de Iniesta en el minuto 116.
+    Explora documentales y series sobre el torneo más épico del fútbol español.</p>
+    <div class="hero-stats">
+      <div class="stat">
+        <div class="stat-number" id="hero-total">0</div>
+        <div class="stat-label">Series</div>
+      </div>
+      <div class="stat">
+        <div class="stat-number">7</div>
+        <div class="stat-label">Partidos</div>
+      </div>
+      <div class="stat">
+        <div class="stat-number">8</div>
+        <div class="stat-label">Goles</div>
+      </div>
+      <div class="stat">
+        <div class="stat-number">1</div>
+        <div class="stat-label">Título</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<main>
+
+  <div class="toolbar">
+    <div class="search-wrap">
+      <span class="search-label">Buscar</span>
+      <input type="text" id="search-input" placeholder="Nombre, descripción o género..." />
+    </div>
+    <div class="filter-group">
+      <select id="sort-select">
+        <option value="id">Ordenar: ID</option>
+        <option value="name">Nombre</option>
+        <option value="year">Año</option>
+        <option value="genre">Género</option>
+        <option value="created_at">Fecha</option>
+      </select>
+      <select id="order-select">
+        <option value="asc">Ascendente</option>
+        <option value="desc">Descendente</option>
+      </select>
+      <select id="limit-select">
+        <option value="6">6 por página</option>
+        <option value="10" selected>10 por página</option>
+        <option value="20">20 por página</option>
+      </select>
+    </div>
+  </div>
+
+  <p style="color:var(--text-muted);font-size:.85rem;margin-bottom:1.5rem">
+    <span id="total-count">0</span> series encontradas
+  </p>
+
+  <div id="series-grid"></div>
+
+  <div class="pagination" id="pagination"></div>
+
+</main>
+
+<div id="toast-container"></div>
+
+<div class="modal-overlay" id="serie-modal" role="dialog" aria-modal="true">
+  <div class="modal">
+    <div class="modal-header">
+      <h2 class="modal-title" id="modal-title">Nueva Serie</h2>
+      <button class="modal-close" data-close-modal="serie-modal" aria-label="Cerrar">Cerrar</button>
+    </div>
+    <div class="modal-body">
+      <form id="serie-form" novalidate>
+        <div class="form-group">
+          <label for="f-name">Nombre obligatorio</label>
+          <input type="text" id="f-name" placeholder="Ej: España Campeona" maxlength="255" required />
+          <div class="form-error" id="err-name"></div>
+        </div>
+        <div class="form-group">
+          <label for="f-description">Descripción</label>
+          <textarea id="f-description" placeholder="Escribe una descripción del documental o serie..." rows="3"></textarea>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label for="genre-select-trigger">Género</label>
+            <div class="custom-select" data-genre-select>
+              <input type="hidden" id="f-genre" value="" />
+              <button type="button" class="custom-select-trigger" id="genre-select-trigger" aria-haspopup="listbox" aria-expanded="false">
+                <span id="genre-select-label">Seleccionar...</span>
+              </button>
+              <div class="custom-select-menu" id="genre-select-menu" role="listbox" aria-labelledby="genre-select-trigger">
+                <button type="button" class="custom-select-option" data-genre-option value="" role="option" aria-selected="true">Seleccionar...</button>
+                <button type="button" class="custom-select-option" data-genre-option value="Documental" role="option" aria-selected="false">Documental</button>
+                <button type="button" class="custom-select-option" data-genre-option value="Serie Documental" role="option" aria-selected="false">Serie Documental</button>
+                <button type="button" class="custom-select-option" data-genre-option value="Biografía" role="option" aria-selected="false">Biografía</button>
+                <button type="button" class="custom-select-option" data-genre-option value="Análisis Deportivo" role="option" aria-selected="false">Análisis Deportivo</button>
+                <button type="button" class="custom-select-option" data-genre-option value="Viajes" role="option" aria-selected="false">Viajes</button>
+                <button type="button" class="custom-select-option" data-genre-option value="Entrevista" role="option" aria-selected="false">Entrevista</button>
+                <button type="button" class="custom-select-option" data-genre-option value="Otro" role="option" aria-selected="false">Otro</button>
+              </div>
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="f-year">Año obligatorio</label>
+            <input type="number" id="f-year" value="2010" min="1900" max="2100" required />
+            <div class="form-error" id="err-year"></div>
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="f-image-url">URL de imagen (opcional)</label>
+          <input type="text" id="f-image-url" placeholder="https://... o deja vacío y sube una después" />
+        </div>
+        <div class="form-actions">
+          <button type="button" class="btn btn-ghost" data-close-modal="serie-modal">Cancelar</button>
+          <button type="submit" class="btn btn-primary">Guardar</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="rating-modal" role="dialog" aria-modal="true">
+  <div class="modal">
+    <div class="modal-header">
+      <h2 class="modal-title">Calificaciones</h2>
+      <button class="modal-close" data-close-modal="rating-modal">Cerrar</button>
+    </div>
+    <div class="modal-body">
+      <p style="color:var(--text-muted);margin-bottom:1rem;font-size:.9rem">
+        Serie: <strong id="rating-serie-name" style="color:var(--gold)"></strong>
+      </p>
+      <p style="font-size:.9rem;color:var(--text-muted);margin-bottom:.5rem">
+        Promedio actual: <strong id="rating-avg" style="color:var(--gold)">Sin calificaciones</strong>
+      </p>
+
+      <div id="rating-list" class="rating-list"></div>
+
+      <hr style="border-color:rgba(255,255,255,.08);margin:1.25rem 0" />
+
+      <form id="rating-form" novalidate>
+        <div class="form-group">
+          <label>Tu puntuación (1-10)</label>
+          <div class="stars" id="stars-container"></div>
+          <input type="hidden" id="f-score" value="" />
+        </div>
+        <div class="form-group">
+          <label for="f-comment">Comentario (opcional)</label>
+          <textarea id="f-comment" placeholder="¿Qué te pareció?" rows="2"></textarea>
+        </div>
+        <div class="form-actions">
+          <button type="button" class="btn btn-ghost" data-close-modal="rating-modal">Cerrar</button>
+          <button type="submit" class="btn btn-gold">Calificar</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="upload-modal" role="dialog" aria-modal="true">
+  <div class="modal">
+    <div class="modal-header">
+      <h2 class="modal-title">Subir Imagen</h2>
+      <button class="modal-close" data-close-modal="upload-modal">Cerrar</button>
+    </div>
+    <div class="modal-body">
+      <p style="color:var(--text-muted);margin-bottom:1rem;font-size:.9rem">
+        Serie: <strong id="upload-serie-name" style="color:var(--gold)"></strong>
+      </p>
+      <form id="upload-form" novalidate>
+        <div class="upload-zone" id="upload-zone">
+          <input type="file" id="image-file" accept="image/*" />
+          <div class="upload-label">Seleccionar imagen</div>
+          <p style="color:var(--text-muted);font-size:.9rem">
+            Arrastra una imagen aquí o haz clic para seleccionar<br/>
+            <span style="font-size:.78rem">Máx. 1MB - JPG, PNG, WebP, GIF</span>
+          </p>
+          <p id="upload-filename" style="color:var(--gold);font-size:.85rem;margin-top:.5rem"></p>
+        </div>
+        <div class="upload-preview" id="upload-preview"></div>
+        <div class="form-actions" style="margin-top:1.25rem">
+          <button type="button" class="btn btn-ghost" data-close-modal="upload-modal">Cancelar</button>
+          <button type="submit" class="btn btn-primary">Subir</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="delete-modal" role="dialog" aria-modal="true">
+  <div class="modal" style="max-width:420px">
+    <div class="modal-header">
+      <h2 class="modal-title" style="color:var(--red)">Eliminar Serie</h2>
+      <button class="modal-close" data-close-modal="delete-modal">Cerrar</button>
+    </div>
+    <div class="modal-body">
+      <p style="color:var(--text-muted);margin-bottom:1.5rem;line-height:1.6">
+        ¿Estás seguro de que quieres eliminar
+        <strong id="delete-name" style="color:var(--text)"></strong>?
+        Esta acción no se puede deshacer.
+      </p>
+      <div class="form-actions">
+        <button class="btn btn-ghost" data-close-modal="delete-modal">Cancelar</button>
+        <button class="btn btn-danger" id="confirm-delete-btn">Eliminar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="config.js?v=20260506-3"></script>
+<script type="module" src="js/app.js?v=20260506-3"></script>
+</body>
+</html>
