@@ -1,4 +1,4 @@
-/bin/sh
+#!/bin/sh
 set -eu
 
 api_base_url="${API_BASE_URL:-}"
