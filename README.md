@@ -4,7 +4,7 @@
 
 🔗 **Repositorio del backend:** [mundial2010-backend](https://github.com/zoomjosue/mundial2010-backend)
 
-**Link del backend en el servidor corriendo** https://mundial2010-frontend.onrender.com/
+**Link del frontend en el servidor corriendo** https://mundial2010-frontend.onrender.com/
 
 ##  Cómo correr el proyecto localmente
 
